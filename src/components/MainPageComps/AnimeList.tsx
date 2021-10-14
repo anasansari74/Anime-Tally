@@ -16,6 +16,8 @@ const MovieListDiv = styled.div`
     place-items: center;
 
     width: 100%;
+
+    padding-top: 0.5rem;
   }
 
   .card: hover {
@@ -39,7 +41,7 @@ export default function AnimeList() {
   const animeList = useStore(store => store.animeList);
   const fetchAnime = useStore(store => store.fetchAnime);
 
-  const handleClick = animeId => {
+  const handleClick = (animeId: number) => {
     history.push(`/anime/${animeId}`);
   };
 

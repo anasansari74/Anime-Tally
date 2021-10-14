@@ -2,7 +2,7 @@ import React from "react";
 
 import create from "zustand";
 
-type AnimeCardType = {
+type MainPageCardType = {
   airing: boolean;
   end_date: string;
   episodes: number;
@@ -18,9 +18,65 @@ type AnimeCardType = {
   url: string;
 };
 
+type GenreType = {
+  mal_id: number;
+  name: string;
+  type: string;
+  url: string;
+};
+
+type AnimeType = {
+  aired?: {};
+  airing?: boolean;
+  background?: string;
+  broadcast?: string;
+  demographics?: [];
+  duration?: string;
+  ending_themes?: {}[];
+  episodes?: number;
+  explicit_genres?: [];
+  external_links?: {}[];
+  favorites?: number;
+  genres?: GenreType[];
+  image_url?: string;
+  licensors?: {}[];
+  mal_id?: number;
+  members?: number;
+  opening_themes?: {}[];
+  popularity?: number;
+  premiered?: string;
+  producers?: {}[];
+  rank?: number;
+  rating?: string;
+  related?: {};
+  request_cache_expiry?: number;
+  request_cached?: true;
+  request_hash?: string;
+  score?: number;
+  scored_by?: number;
+  source?: string;
+  status?: string;
+  studios?: {}[];
+  synopsis?: string;
+  themes?: {}[];
+  title?: string;
+  title_english?: string;
+  title_japanese?: string;
+  title_synonyms?: {}[];
+  trailer_url?: string;
+  type?: string;
+  url?: string;
+};
+
 type StoreType = {
-  animeList: AnimeCardType[];
+  animeList: MainPageCardType[];
   fetchAnime: (param: number) => void;
+
+  selectedAnime: AnimeType;
+  fetchAnimeInfo: (param: number) => void;
+
+  status: string;
+  setStatus: (param: string) => void;
 };
 
 const useStore = create<StoreType>((set, get) => ({
@@ -34,6 +90,22 @@ const useStore = create<StoreType>((set, get) => ({
     )
       .then(res => res.json())
       .then(data => set({ animeList: data.results }));
+  },
+
+  //Anime Page
+  selectedAnime: {},
+
+  // // Fetch info for a single anime
+  fetchAnimeInfo: animeId => {
+    fetch(`https://api.jikan.moe/v3/anime/${animeId}`)
+      .then(res => res.json())
+      .then(data => set({ selectedAnime: data }));
+  },
+
+  //Statuses page
+  status: "",
+  setStatus: pageToView => {
+    set({ status: pageToView });
   },
 }));
 
