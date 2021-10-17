@@ -69,14 +69,14 @@ type AnimeType = {
 };
 
 export type StatusDataType = {
-  mal_id?: number;
-  name?: string;
-  image_url?: string;
+  mal_id: number;
+  name: string;
+  image_url: string;
 };
 
 type StoreType = {
   animeList: MainPageCardType[] | [];
-  fetchAnime: (param: number) => void;
+  fetchAnime: () => void;
 
   fetchSearch: (param: string) => void;
 
@@ -89,6 +89,20 @@ type StoreType = {
   favourites: StatusDataType[] | [];
   setFavourites: (param: StatusDataType) => void;
   removeFromFav: (param: StatusDataType) => void;
+
+  existsInArray: (param1: StatusDataType[], param2: number) => void;
+
+  planToWatch: StatusDataType[] | [];
+  watching: StatusDataType[] | [];
+  completed: StatusDataType[] | [];
+  dropped: StatusDataType[] | [];
+
+  setStatusToPlanToWatch: (param: StatusDataType) => void;
+  setStatusToWarching: (param: StatusDataType) => void;
+  setStatusToCompleted: (param: StatusDataType) => void;
+  setStatusToDropped: (param: StatusDataType) => void;
+
+  removeFromOthers: (param: number) => void;
 };
 
 const pageNumber = 1;
@@ -98,7 +112,7 @@ const useStore = create<StoreType>((set, get) => ({
   animeList: [],
 
   // //Fetching all anime
-  fetchAnime: pageNumber => {
+  fetchAnime: () => {
     fetch(
       `https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&page=${pageNumber}`
     )
@@ -123,12 +137,6 @@ const useStore = create<StoreType>((set, get) => ({
       .then(data => set({ selectedAnime: data }));
   },
 
-  //Statuses page
-  status: "",
-  setStatus: pageToView => {
-    set({ status: pageToView });
-  },
-
   //Favourites Page
   favourites: [],
   setFavourites: object => {
@@ -150,6 +158,62 @@ const useStore = create<StoreType>((set, get) => ({
       favourites: get().favourites.filter(
         target => target.mal_id !== object.mal_id
       ),
+    });
+  },
+
+  existsInArray: (array, id) => {
+    array.find(data => data.mal_id === id);
+  },
+
+  //Statuses page
+  // //Statuses for status page
+  status: "",
+  setStatus: pageToView => {
+    set({ status: pageToView });
+  },
+
+  //Statuses for shows
+  planToWatch: [],
+  watching: [],
+  completed: [],
+  dropped: [],
+
+  // //set Status to selected show
+
+  // Refactored version (not working):
+  // // setShowStatus: (status, show) => {
+  // //  set({ status: [...get().status, show] });
+  // // },
+
+  setStatusToPlanToWatch: show => {
+    get().removeFromOthers(show.mal_id);
+    set({ planToWatch: [...get().planToWatch, show] });
+  },
+  setStatusToWarching: show => {
+    get().removeFromOthers(show.mal_id);
+    set({ watching: [...get().watching, show] });
+  },
+  setStatusToCompleted: show => {
+    get().removeFromOthers(show.mal_id);
+    set({ completed: [...get().completed, show] });
+  },
+  setStatusToDropped: show => {
+    get().removeFromOthers(show.mal_id);
+    set({ dropped: [...get().dropped, show] });
+  },
+
+  removeFromOthers: id => {
+    set({
+      planToWatch: get().planToWatch.filter(target => target.mal_id !== id),
+    });
+    set({
+      watching: get().watching.filter(target => target.mal_id !== id),
+    });
+    set({
+      completed: get().completed.filter(target => target.mal_id !== id),
+    });
+    set({
+      dropped: get().dropped.filter(target => target.mal_id !== id),
     });
   },
 }));

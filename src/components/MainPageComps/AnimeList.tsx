@@ -45,11 +45,9 @@ export default function AnimeList() {
     history.push(`/anime/${animeId}`);
   };
 
-  const pageNumber = 1;
-
   useEffect(() => {
-    fetchAnime(pageNumber);
-  }, [fetchAnime, pageNumber]);
+    fetchAnime();
+  }, [fetchAnime]);
 
   return (
     <MovieListDiv>

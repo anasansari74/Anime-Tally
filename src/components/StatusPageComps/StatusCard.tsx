@@ -1,9 +1,8 @@
 import React from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import useStore from "../../store";
 
-const FavouritesCardDiv = styled.div`
+const StatusCardDiv = styled.div`
   display: grid;
   grid-auto-flow: row;
 
@@ -31,15 +30,14 @@ const FavouritesCardDiv = styled.div`
   }
 `;
 
-export default function favouritesCard({ show }) {
+export default function StatusCard({ show }) {
   const history = useHistory();
-  const removeFromFav = useStore(store => store.removeFromFav);
 
   const handleClick = id => {
     history.push(`/anime/${id}`);
   };
   return (
-    <FavouritesCardDiv>
+    <StatusCardDiv>
       <p className="no-wrap" onClick={() => handleClick(show.mal_id)}>
         <strong>{show.name}</strong>
       </p>
@@ -50,9 +48,6 @@ export default function favouritesCard({ show }) {
         width="180px"
         onClick={() => handleClick(show.mal_id)}
       />
-      <button className="button" onClick={() => removeFromFav(show)}>
-        Remove from favourites
-      </button>
-    </FavouritesCardDiv>
+    </StatusCardDiv>
   );
 }

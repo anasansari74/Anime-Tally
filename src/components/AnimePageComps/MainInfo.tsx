@@ -51,16 +51,26 @@ const MainInfoDiv = styled.div`
     cursor: pointer;
   }
 
-  .selected-fav {
-    background-color: yellow;
-    color: royalblue;
-    border: none;
+  .selected {
+    background-color: royalblue;
+    color: white;
+    border-color: royalblue;
   }
 `;
 
 export default function MainInfo({ selectedAnime }) {
   const favourites = useStore(store => store.favourites);
   const setFavourites = useStore(store => store.setFavourites);
+  const planToWatch = useStore(store => store.planToWatch);
+  const watching = useStore(store => store.watching);
+  const completed = useStore(store => store.completed);
+  const dropped = useStore(store => store.dropped);
+  const setStatusToPlanToWatch = useStore(
+    store => store.setStatusToPlanToWatch
+  );
+  const setStatusToWarching = useStore(store => store.setStatusToWarching);
+  const setStatusToCompleted = useStore(store => store.setStatusToCompleted);
+  const setStatusToDropped = useStore(store => store.setStatusToDropped);
 
   const handleFavClick = (id, title, image) => {
     const favObject = {
@@ -70,6 +80,24 @@ export default function MainInfo({ selectedAnime }) {
     };
 
     setFavourites(favObject);
+  };
+
+  const handleStatusClick = (status: string) => {
+    const statusObject = {
+      mal_id: selectedAnime.mal_id,
+      name: selectedAnime.title,
+      image_url: selectedAnime.image_url,
+    };
+
+    if (status === "plantToWatch") {
+      setStatusToPlanToWatch(statusObject);
+    } else if (status === "watching") {
+      setStatusToWarching(statusObject);
+    } else if (status === "completed") {
+      setStatusToCompleted(statusObject);
+    } else {
+      setStatusToDropped(statusObject);
+    }
   };
 
   return (
@@ -110,10 +138,54 @@ export default function MainInfo({ selectedAnime }) {
           </ul>
           <div className="set-status">
             <h3>Set Status:</h3>
-            <button className="button">Plant to watch</button>
-            <button className="button">Currently watching</button>
-            <button className="button">Completed</button>
-            <button className="button">Dropped</button>
+            <button
+              className={`button ${
+                planToWatch.find(show => show.mal_id === selectedAnime.mal_id)
+                  ? "selected"
+                  : ""
+              }`}
+              onClick={() => {
+                handleStatusClick("plantToWatch");
+              }}
+            >
+              Plant to watch
+            </button>
+            <button
+              className={`button ${
+                watching.find(show => show.mal_id === selectedAnime.mal_id)
+                  ? "selected"
+                  : ""
+              }`}
+              onClick={() => {
+                handleStatusClick("watching");
+              }}
+            >
+              Currently watching
+            </button>
+            <button
+              className={`button ${
+                completed.find(show => show.mal_id === selectedAnime.mal_id)
+                  ? "selected"
+                  : ""
+              }`}
+              onClick={() => {
+                handleStatusClick("completed");
+              }}
+            >
+              Completed
+            </button>
+            <button
+              className={`button ${
+                dropped.find(show => show.mal_id === selectedAnime.mal_id)
+                  ? "selected"
+                  : ""
+              }`}
+              onClick={() => {
+                handleStatusClick("dropped");
+              }}
+            >
+              Dropped
+            </button>
           </div>
         </div>
       </div>

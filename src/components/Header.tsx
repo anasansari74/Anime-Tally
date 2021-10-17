@@ -49,10 +49,17 @@ const HeaderDiv = styled.div`
 
 export default function Header() {
   const history = useHistory();
+
   const setStatus = useStore(store => store.setStatus);
+  const fetchAnime = useStore(store => store.fetchAnime);
   return (
     <HeaderDiv>
-      <h1 onClick={() => setStatus("")}>
+      <h1
+        onClick={() => {
+          setStatus("");
+          fetchAnime();
+        }}
+      >
         <Link to="/" className="logo center un-selected">
           AniT
         </Link>
