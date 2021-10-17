@@ -12,8 +12,6 @@ export default function AnimePage() {
   const selectedAnime = useStore(store => store.selectedAnime);
   const fetchAnimeInfo = useStore(store => store.fetchAnimeInfo);
 
-  console.log(selectedAnime);
-
   useEffect(() => {
     fetchAnimeInfo(animeId);
   }, [fetchAnimeInfo, animeId]);

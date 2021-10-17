@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import AnimePage from "./pages/AnimePage";
+import FavouritesPage from "./pages/FavouritesPage";
 
 import MainPage from "./pages/MainPage";
 import StatusPage from "./pages/StatusPage";
@@ -44,6 +45,9 @@ function App() {
         </Route>
         <Route path="/status/:status">
           <StatusPage />
+        </Route>
+        <Route path="/favorites">
+          <FavouritesPage />
         </Route>
       </Switch>
       <Footer />

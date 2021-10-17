@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import useStore from "../store";
@@ -33,6 +34,10 @@ const HeaderDiv = styled.div`
     color: initial;
   }
 
+  .button {
+    cursor: pointer;
+  }
+
   .un-selected {
     padding: 0.5rem;
     margin: 0.5rem;
@@ -43,6 +48,7 @@ const HeaderDiv = styled.div`
 `;
 
 export default function Header() {
+  const history = useHistory();
   const setStatus = useStore(store => store.setStatus);
   return (
     <HeaderDiv>
@@ -52,24 +58,35 @@ export default function Header() {
         </Link>
       </h1>
       <div className="center statuses">
-        <h3 className="un-selected" onClick={() => setStatus("Plan to Watch")}>
+        <h3
+          className="button un-selected"
+          onClick={() => setStatus("Plan to Watch")}
+        >
           Plan to Watch
         </h3>
         <h3
-          className="un-selected"
+          className="button un-selected"
           onClick={() => setStatus("Currently Watching")}
         >
           Currently Watching
         </h3>
-        <h3 className="un-selected" onClick={() => setStatus("Completed")}>
+        <h3
+          className="button un-selected"
+          onClick={() => setStatus("Completed")}
+        >
           Completed
         </h3>
-        <h3 className="un-selected" onClick={() => setStatus("Dropped")}>
+        <h3 className="button un-selected" onClick={() => setStatus("Dropped")}>
           Dropped
         </h3>
       </div>
       <div className="center favourites">
-        <h3 className="un-selected">Favourites</h3>
+        <h3
+          className="button un-selected"
+          onClick={() => history.push("/favorites")}
+        >
+          Favourites
+        </h3>
       </div>
     </HeaderDiv>
   );

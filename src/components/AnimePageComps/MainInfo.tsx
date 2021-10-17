@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import useStore from "../../store";
 
 const MainInfoDiv = styled.div`
   display: grid;
@@ -49,9 +50,28 @@ const MainInfoDiv = styled.div`
     font: inherit;
     cursor: pointer;
   }
+
+  .selected-fav {
+    background-color: yellow;
+    color: royalblue;
+    border: none;
+  }
 `;
 
 export default function MainInfo({ selectedAnime }) {
+  const favourites = useStore(store => store.favourites);
+  const setFavourites = useStore(store => store.setFavourites);
+
+  const handleFavClick = (id, title, image) => {
+    const favObject = {
+      mal_id: id,
+      name: title,
+      image_url: image,
+    };
+
+    setFavourites(favObject);
+  };
+
   return (
     <MainInfoDiv className="main">
       <div className="main-info">
@@ -62,9 +82,24 @@ export default function MainInfo({ selectedAnime }) {
         />
         <div>
           <div className="main-top">
-            <h1>{selectedAnime.title}</h1>
+            <h2>{selectedAnime.title}</h2>
             <div></div>
-            <button className="button">Add To favourites</button>
+            <button
+              className="button"
+              onClick={() =>
+                handleFavClick(
+                  selectedAnime.mal_id,
+                  selectedAnime.title,
+                  selectedAnime.image_url
+                )
+              }
+            >
+              {favourites.find(show => show.mal_id === selectedAnime.mal_id) ? (
+                <strong>Remove from favourites</strong>
+              ) : (
+                "Add To favourites"
+              )}
+            </button>
           </div>
           <h3>{`(${selectedAnime.title_japanese})`}</h3>
           <ul>

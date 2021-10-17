@@ -68,16 +68,30 @@ type AnimeType = {
   url?: string;
 };
 
+export type StatusDataType = {
+  mal_id?: number;
+  name?: string;
+  image_url?: string;
+};
+
 type StoreType = {
-  animeList: MainPageCardType[];
+  animeList: MainPageCardType[] | [];
   fetchAnime: (param: number) => void;
 
-  selectedAnime: AnimeType;
+  fetchSearch: (param: string) => void;
+
+  selectedAnime: AnimeType | {};
   fetchAnimeInfo: (param: number) => void;
 
   status: string;
   setStatus: (param: string) => void;
+
+  favourites: StatusDataType[] | [];
+  setFavourites: (param: StatusDataType) => void;
+  removeFromFav: (param: StatusDataType) => void;
 };
+
+const pageNumber = 1;
 
 const useStore = create<StoreType>((set, get) => ({
   //Main Page
@@ -88,6 +102,13 @@ const useStore = create<StoreType>((set, get) => ({
     fetch(
       `https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&page=${pageNumber}`
     )
+      .then(res => res.json())
+      .then(data => set({ animeList: data.results }));
+  },
+
+  // //Search Feature
+  fetchSearch: name => {
+    fetch(`https://api.jikan.moe/v3/search/anime?q=${name}&page=${pageNumber}`)
       .then(res => res.json())
       .then(data => set({ animeList: data.results }));
   },
@@ -106,6 +127,30 @@ const useStore = create<StoreType>((set, get) => ({
   status: "",
   setStatus: pageToView => {
     set({ status: pageToView });
+  },
+
+  //Favourites Page
+  favourites: [],
+  setFavourites: object => {
+    // Does the show already exist
+    const showFound = get().favourites.find(
+      show => show.mal_id === object.mal_id
+    );
+
+    if (showFound === undefined) {
+      set({ favourites: [...get().favourites, object] });
+    } else {
+      // Delete the show from favourites
+      get().removeFromFav(object);
+    }
+  },
+
+  removeFromFav: object => {
+    set({
+      favourites: get().favourites.filter(
+        target => target.mal_id !== object.mal_id
+      ),
+    });
   },
 }));
 
