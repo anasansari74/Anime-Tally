@@ -2,8 +2,8 @@
   "name": "openoriginstest",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite && react-dotenv",
-    "build": "tsc && vite build && react-dotenv",
+    "dev": "vite",
+    "build": "tsc && vite build",
     "serve": "vite preview"
   },
   "dependencies": {
@@ -22,10 +22,5 @@
     "@vitejs/plugin-react": "^1.0.0",
     "typescript": "^4.3.2",
     "vite": "^2.6.4"
-  },
-  "react-dotenv": {
-    "whitelist": [
-      "API_URL"
-    ]
   }
 }
