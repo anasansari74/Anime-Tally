@@ -2,6 +2,8 @@ import React from "react";
 
 import create from "zustand";
 
+import env from "react-dotenv";
+
 type MainPageCardType = {
   airing: boolean;
   end_date: string;
@@ -107,6 +109,8 @@ type StoreType = {
 
 const pageNumber = 1;
 
+const API_URL = "https://api.jikan.moe/v3/";
+
 const useStore = create<StoreType>((set, get) => ({
   //Main Page
   animeList: [],
@@ -114,7 +118,7 @@ const useStore = create<StoreType>((set, get) => ({
   // //Fetching all anime
   fetchAnime: () => {
     fetch(
-      `https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&page=${pageNumber}`
+      `${API_URL}search/anime?q=&order_by=members&sort=desc&page=${pageNumber}`
     )
       .then(res => res.json())
       .then(data => set({ animeList: data.results }));
@@ -122,7 +126,7 @@ const useStore = create<StoreType>((set, get) => ({
 
   // //Search Feature
   fetchSearch: name => {
-    fetch(`https://api.jikan.moe/v3/search/anime?q=${name}&page=${pageNumber}`)
+    fetch(`${API_URL}search/anime?q=${name}&page=${pageNumber}`)
       .then(res => res.json())
       .then(data => set({ animeList: data.results }));
   },
@@ -132,7 +136,7 @@ const useStore = create<StoreType>((set, get) => ({
 
   // // Fetch info for a single anime
   fetchAnimeInfo: animeId => {
-    fetch(`https://api.jikan.moe/v3/anime/${animeId}`)
+    fetch(`${API_URL}anime/${animeId}`)
       .then(res => res.json())
       .then(data => set({ selectedAnime: data }));
   },
